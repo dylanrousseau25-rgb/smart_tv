@@ -6,9 +6,13 @@
     var KEY = Platform.KEY;
     var MAX_SHELF = 8;
 
+    // À augmenter quand les valeurs par défaut changent, pour les appliquer aux TV déjà configurées
+    var SETTINGS_VERSION = 2;
+
     var DEFAULTS = {
+        version: SETTINGS_VERSION,
         shelf: null,          // identifiants des apps, dans l'ordre ; null = choisir automatiquement
-        city: '',             // vide = position de la connexion
+        city: 'Niort',        // vide = position de la connexion
         theme: 'auto',
         idleMin: 5,           // 0 = jamais
         artCollection: 'chefs',
@@ -27,7 +31,15 @@
     var ARTDUR_CHOICES = [{ value: 30, label: '30 s' }, { value: 60, label: '1 min' },
         { value: 180, label: '3 min' }, { value: 600, label: '10 min' }];
 
-    var settings = U.extend({}, DEFAULTS, U.load('settings', {}));
+    var stored = U.load('settings', {});
+    var settings = U.extend({}, DEFAULTS, stored);
+    if ((stored.version || 1) < SETTINGS_VERSION) {
+        // Nouvelle étagère et ville par défaut ; les autres réglages (thème, veille) sont conservés
+        settings.version = SETTINGS_VERSION;
+        settings.shelf = null;
+        settings.city = DEFAULTS.city;
+        U.store('weather', null);
+    }
     var draft = null;          // copie des réglages pendant l'édition
     var apps = [];
     var appsById = {};

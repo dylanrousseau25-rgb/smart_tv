@@ -36,6 +36,8 @@ var Platform = (function () {
         { match: /twitch/i, label: 'twitch', bg: '#9146FF', fg: '#FFFFFF' },
         { match: /deezer/i, label: 'deezer', bg: '#A238FF', fg: '#FFFFFF' },
         { match: /crunchyroll/i, label: 'crunchyroll', bg: '#F47521', fg: '#FFFFFF' },
+        { match: /^adn\b|anime digital/i, label: 'ADN', bg: '#0B1B3F', fg: '#2FA8FF' },
+        { match: /apple ?music/i, label: 'Apple Music', bg: '#FA2D48', fg: '#FFFFFF' },
         { match: /^max$|hbo/i, label: 'max', bg: '#002BE7', fg: '#FFFFFF' },
         { match: /paramount/i, label: 'Paramount+', bg: '#0064FF', fg: '#FFFFFF' },
         { match: /rakuten/i, label: 'Rakuten TV', bg: '#BF0000', fg: '#FFFFFF' },
@@ -45,12 +47,12 @@ var Platform = (function () {
     ];
 
     // Ordre de préférence pour remplir l'étagère au premier lancement
-    var DEFAULT_ORDER = [/netflix/i, /youtube/i, /prime ?video|amazon/i, /disney/i, /canal/i,
-        /france ?tv|france\.tv/i, /apple ?tv/i, /spotify/i, /arte/i, /plex/i];
+    var DEFAULT_ORDER = [/youtube(?!.*(kids|music))/i, /netflix/i, /disney/i, /tf1/i, /crunchyroll/i,
+        /^adn\b|anime digital/i, /canal/i, /apple ?music/i];
 
     var MOCK_APPS = [
-        'Netflix', 'YouTube', 'Prime Video', 'Disney+', 'CANAL+', 'france.tv', 'Apple TV',
-        'Spotify', 'ARTE', 'Plex', 'Twitch', 'TF1+', 'Deezer', 'Internet', 'Samsung TV Plus'
+        'Netflix', 'YouTube', 'Prime Video', 'Disney+', 'CANAL+', 'france.tv', 'Apple TV', 'Apple Music',
+        'Crunchyroll', 'ADN', 'Spotify', 'ARTE', 'Plex', 'Twitch', 'TF1+', 'Internet', 'Samsung TV Plus'
     ];
 
     function brandFor(name) {
