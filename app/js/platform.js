@@ -20,7 +20,7 @@ var Platform = (function () {
      * `ids` sert de secours si la TV refuse de lister les apps (voir knownApps()).
      */
     var BRANDS = [
-        { match: /netflix/i, label: 'NETFLIX', bg: '#000000', fg: '#E50914', ids: ['3201907018807', '11101200001'] },
+        { match: /netflix/i, label: 'NETFLIX', bg: '#000000', fg: '#E50914', ids: ['3201907018807', 'org.tizen.netflix-app', '11101200001'] },
         { match: /youtube(?!.*(kids|music))/i, label: 'YouTube', bg: '#FF0000', fg: '#FFFFFF', ids: ['111299001912', '9Ur5IzDKqV.TizenYouTube'] },
         { match: /prime ?video|amazon/i, label: 'prime video', bg: '#00050D', fg: '#1A98FF', ids: ['3201910019365', 'org.tizen.ignition'] },
         { match: /disney/i, label: 'Disney+', bg: '#0B1D5C', fg: '#FFFFFF', ids: ['3201901017640'] },
@@ -62,8 +62,33 @@ var Platform = (function () {
         return null;
     }
 
-    // Apps lancées sans icône "show" (services système) : on les masque.
-    var HIDDEN = /free my tv|^org\.tizen\.|widget|service|setting|smartthings ?hub|e-manual|launcher/i;
+    /*
+     * Services système à masquer, repérés par leur NOM uniquement : des apps normales ont des
+     * identifiants comme "org.tizen.netflix-app" ou "QmpwflxWdt.CanalPlusLauncher".
+     */
+    var HIDDEN = /free my tv|widget|service|daemon|setting|e-manual/i;
+
+    // Certaines apps existent en double : la vraie et un raccourci "dummy" (installation à la demande).
+    function isDummy(id) { return /dummy/i.test(id); }
+
+    function dedupe(apps) {
+        var byName = {};
+        var out = [];
+        apps.forEach(function (a) {
+            var key = a.name.toLowerCase();
+            var prev = byName[key];
+            if (!prev) { byName[key] = a; out.push(a); return; }
+            // On garde la vraie app en premier, l'autre identifiant sert de secours au lancement
+            if (isDummy(prev.id) && !isDummy(a.id)) {
+                a.altIds = [prev.id];
+                out[out.indexOf(prev)] = a;
+                byName[key] = a;
+            } else {
+                prev.altIds = (prev.altIds || []).concat(a.id);
+            }
+        });
+        return out;
+    }
 
     function listApps(callback) {
         if (!isTV) {
@@ -78,9 +103,10 @@ var Platform = (function () {
                 var apps = [];
                 for (var i = 0; i < infos.length; i++) {
                     var a = infos[i];
-                    if (!a.show || a.id === ownId || !a.name || HIDDEN.test(a.name) || HIDDEN.test(a.id)) continue;
+                    if (!a.show || a.id === ownId || !a.name || HIDDEN.test(a.name)) continue;
                     apps.push({ id: a.id, name: a.name, icon: a.iconPath || null });
                 }
+                apps = dedupe(apps);
                 apps.sort(function (x, y) { return x.name.localeCompare(y.name); });
                 callback(apps.length ? apps : knownApps());
             }, function () {

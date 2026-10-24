@@ -7,7 +7,7 @@
     var MAX_SHELF = 8;
 
     // À augmenter quand les valeurs par défaut changent, pour les appliquer aux TV déjà configurées
-    var SETTINGS_VERSION = 2;
+    var SETTINGS_VERSION = 3;
 
     var DEFAULTS = {
         version: SETTINGS_VERSION,
