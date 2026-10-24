@@ -29,9 +29,11 @@ rm -rf "$BUILD"
 mkdir -p "$BUILD"
 cp -R "$ROOT/app/." "$BUILD/"
 "$TIZEN" package -t wgt -s "$PROFILE" -- "$BUILD"
-WGT="$(ls "$BUILD"/*.wgt | head -n 1)"
+# Le nom généré ("Free My TV.wgt") contient des espaces, que l'installeur de la TV ne gère pas
+WGT="FreeMyTV.wgt"
+mv "$(ls "$BUILD"/*.wgt | head -n 1)" "$BUILD/$WGT"
 
-echo "3/3  Installation de $(basename "$WGT")…"
-"$TIZEN" install -n "$(basename "$WGT")" -s "$TV_IP:26101" -- "$BUILD"
+echo "3/3  Installation de $WGT…"
+"$TIZEN" install -n "$WGT" -s "$TV_IP:26101" -- "$BUILD"
 
 echo "Terminé : ouvre « Free My TV » dans les applications de la TV."

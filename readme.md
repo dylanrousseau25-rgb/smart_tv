@@ -76,6 +76,23 @@ bash scripts/install.sh 192.168.1.42 freemytv
 (remplace `192.168.1.42` par l'IP de ta TV). L'app **Free My TV** apparaît ensuite dans les applications de la TV.
 Pour un accès rapide, déplace-la en première position de la barre d'accueil Samsung.
 
+## Dépannage
+
+- **Mac à puce Apple : l'installeur Tizen s'arrête sur « Killed: 9 » puis « Unable to locate a Java Runtime ».**
+  L'outil de décompression fourni par Samsung est refusé par macOS. Décompresse Java avec celui de macOS, puis relance :
+  ```bash
+  cd ~/Downloads && /usr/bin/unzip -qq -o "$(ls -d /tmp/tizensdk_* | tail -1)/tizen-sdk.zip" "jdk/*" -d ~/.package-manager && ./web-cli_Tizen_SDK_10.0_macos-64.bin --accept-license ~/tizen-studio
+  ```
+  (Rosetta doit être installé : `softwareupdate --install-rosetta --agree-to-license`.)
+- **Version CLI de Tizen : pas de fenêtre Package Manager.** Les modules Samsung s'installent en ligne de commande :
+  ```bash
+  ~/tizen-studio/package-manager/package-manager-cli.bin install --accept-license Certificate-Manager cert-add-on TV-SAMSUNG-Extension-Tools TV-SAMSUNG-Public-WebAppDevelopment
+  ```
+- **`sdb connect` échoue alors que la TV répond au ping.** Redémarre le service : `~/tizen-studio/tools/sdb kill-server`, puis reconnecte-toi.
+- **« Failed to install Tizen application ».** Le certificat de distributeur doit être un certificat **Samsung** créé
+  *pendant que la TV est connectée* (son DUID doit apparaître dans la liste). Un profil qui utilise
+  `tizen-distributor-signer.p12` est refusé par la TV.
+
 ## Limites connues
 
 - **Le bouton Home de Samsung ne peut pas être remplacé** sans modifier le système de la TV : Free My TV est une
