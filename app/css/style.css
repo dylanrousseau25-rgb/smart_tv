@@ -1,0 +1,257 @@
+/*
+ * Conçu pour un écran 1920×1080 : 1rem = 10 px à 1920 de large, et tout suit la taille réelle.
+ * Pas de variables CSS ni de fonctions récentes : les TV Samsung de 2016-2018 ne les gèrent pas.
+ */
+html { font-size: 0.5208vw; }
+html, body {
+    margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden;
+    background: #000; color: #fff;
+    font-family: "SamsungOne", "Samsung Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    -webkit-user-select: none; user-select: none;
+    cursor: default;
+}
+.hidden { display: none !important; }
+
+/* ---------- Ciel / thèmes ---------- */
+#sky {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    -webkit-transition: background 3s; transition: background 3s;
+}
+.theme-jour #sky { background: #3a7bd5; background: linear-gradient(160deg, #163f78 0%, #2f6fc4 45%, #7fb6ee 100%); }
+.theme-couchant #sky { background: #7a3b6e; background: linear-gradient(170deg, #241a44 0%, #6d3566 38%, #d4685a 74%, #f2a865 100%); }
+.theme-nuit #sky { background: #0b1020; background: radial-gradient(ellipse at 20% 0%, #1d2c50 0%, #0b1020 55%, #04060b 100%); }
+.theme-oled #sky { background: #000; }
+
+/* ---------- Effet verre ---------- */
+.chip, #shelf-wrap, .panel {
+    background: rgba(255, 255, 255, 0.10);
+    border: 0.1rem solid rgba(255, 255, 255, 0.16);
+}
+.theme-oled .chip, .theme-oled #shelf-wrap, .theme-oled .panel { background: #0a0a0a; border-color: #222; }
+@supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+    .chip, #shelf-wrap, .panel {
+        -webkit-backdrop-filter: blur(3rem) saturate(140%);
+        backdrop-filter: blur(3rem) saturate(140%);
+    }
+}
+
+/* ---------- Focus télécommande ---------- */
+.focusable {
+    -webkit-transition: -webkit-transform 0.15s ease-out, box-shadow 0.15s ease-out, background-color 0.15s;
+    transition: transform 0.15s ease-out, box-shadow 0.15s ease-out, background-color 0.15s;
+}
+.focusable.focused {
+    -webkit-transform: scale(1.06); transform: scale(1.06);
+    box-shadow: 0 0 0 0.4rem #fff, 0 1.6rem 4rem rgba(0, 0, 0, 0.55);
+    z-index: 2;
+}
+
+/* ---------- Accueil ---------- */
+#home {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    display: -webkit-flex; display: flex;
+    -webkit-flex-direction: column; flex-direction: column;
+}
+#topbar {
+    display: -webkit-flex; display: flex;
+    -webkit-justify-content: space-between; justify-content: space-between;
+    -webkit-align-items: flex-start; align-items: flex-start;
+    padding: 5rem 7rem 0;
+}
+#clock { font-size: 9rem; font-weight: 300; letter-spacing: -0.2rem; line-height: 1; }
+#date { font-size: 2.6rem; opacity: 0.8; margin-top: 0.8rem; }
+#date:first-letter { text-transform: uppercase; }
+
+#top-actions { display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; }
+.chip {
+    display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center;
+    height: 7rem; padding: 0 2.6rem; border-radius: 3.5rem; margin-left: 2rem;
+    font-size: 2.8rem;
+}
+.chip.icon-only { width: 7rem; padding: 0; -webkit-justify-content: center; justify-content: center; }
+.chip svg { width: 3.6rem; height: 3.6rem; fill: #fff; }
+#weather-temp { font-weight: 600; margin: 0 1.2rem; }
+#weather-city { opacity: 0.75; font-size: 2.4rem; }
+
+#hero {
+    -webkit-flex: 1; flex: 1;
+    display: -webkit-flex; display: flex;
+    -webkit-flex-direction: column; flex-direction: column;
+    -webkit-justify-content: flex-end; justify-content: flex-end;
+    padding: 0 7rem 4rem;
+}
+#greeting { font-size: 6.4rem; font-weight: 600; text-shadow: 0 0.3rem 2rem rgba(0, 0, 0, 0.3); }
+#hero-sub { font-size: 2.8rem; opacity: 0.85; margin-top: 1rem; }
+
+#shelf-wrap {
+    margin: 0 5rem 6rem; padding: 3rem 2rem 5rem; border-radius: 4rem;
+    position: relative; overflow: hidden;
+}
+#shelf-hint { font-size: 2.2rem; opacity: 0.85; margin: 0 0 1.6rem 1rem; min-height: 0; }
+#shelf-hint:empty { display: none; }
+#shelf {
+    display: -webkit-flex; display: flex;
+    -webkit-justify-content: center; justify-content: center;
+    padding: 1rem;
+}
+
+.tile {
+    position: relative; -webkit-flex: 0 0 auto; flex: 0 0 auto;
+    width: 17rem; height: 10rem; margin: 0 0.9rem; border-radius: 1.8rem;
+    display: -webkit-flex; display: flex;
+    -webkit-align-items: center; align-items: center;
+    -webkit-justify-content: center; justify-content: center;
+    box-shadow: 0 0.8rem 2.4rem rgba(0, 0, 0, 0.35);
+}
+.tile-label {
+    font-size: 2.9rem; font-weight: 800; letter-spacing: -0.05rem; text-align: center;
+    padding: 0 1.2rem; line-height: 1.1;
+}
+.tile-label.long { font-size: 2.1rem; }
+.tile-icon { max-width: 70%; max-height: 70%; }
+.tile.has-icon .tile-label { display: none; }
+.tile-name {
+    position: absolute; left: -2rem; right: -2rem; bottom: -3.6rem;
+    text-align: center; font-size: 2rem; opacity: 0;
+    -webkit-transition: opacity 0.15s; transition: opacity 0.15s;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.tile.focused .tile-name { opacity: 1; }
+.tile-art { background: rgba(255, 255, 255, 0.14); }
+.tile-art svg { width: 5rem; height: 5rem; fill: none; stroke: #fff; stroke-width: 1.4; }
+.theme-oled .tile-art { background: #161616; }
+
+/* Mode réorganisation */
+.reordering .tile { opacity: 0.75; }
+.reordering .tile.focused { opacity: 1; }
+.tile.picked {
+    -webkit-transform: translateY(-1.6rem) scale(1.1); transform: translateY(-1.6rem) scale(1.1);
+    box-shadow: 0 0 0 0.5rem #ffd54a, 0 2rem 5rem rgba(0, 0, 0, 0.6);
+}
+
+/* ---------- Calques (météo, réglages) ---------- */
+.overlay {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 10;
+    background: rgba(0, 0, 0, 0.55);
+    display: -webkit-flex; display: flex;
+    -webkit-align-items: center; align-items: center;
+    -webkit-justify-content: center; justify-content: center;
+}
+.panel {
+    width: 110rem; max-height: 92vh; border-radius: 4rem; padding: 4rem 5rem; box-sizing: border-box;
+    background: rgba(20, 24, 36, 0.82);
+}
+.panel.wide { width: 170rem; }
+.panel h2 { font-size: 4.2rem; margin: 0 0 2.4rem; font-weight: 600; }
+.panel h3 { font-size: 2.6rem; margin: 2.4rem 0 1.2rem; font-weight: 600; opacity: 0.9; }
+.panel h3:first-child { margin-top: 0; }
+.panel .sub { font-size: 2.1rem; opacity: 0.7; margin: 1.4rem 0 0.8rem; }
+.panel-actions { display: -webkit-flex; display: flex; margin-top: 3.4rem; }
+
+.btn {
+    font-size: 2.6rem; padding: 1.6rem 3.4rem; border-radius: 1.6rem; margin-right: 2rem;
+    background: rgba(255, 255, 255, 0.12);
+}
+.btn.primary { background: #fff; color: #111; font-weight: 600; }
+
+/* Météo */
+.wd-big { display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; }
+.wd-big svg { width: 12rem; height: 12rem; }
+.wd-temp { font-size: 10rem; font-weight: 300; margin: 0 3rem 0 2rem; }
+.wd-info { font-size: 2.6rem; opacity: 0.9; line-height: 1.5; }
+.wd-label { font-size: 3.4rem; font-weight: 600; }
+#wd-hours {
+    display: -webkit-flex; display: flex;
+    -webkit-justify-content: space-between; justify-content: space-between;
+    margin-top: 3.6rem; padding: 2.4rem 0; border-top: 0.1rem solid rgba(255, 255, 255, 0.15);
+    border-bottom: 0.1rem solid rgba(255, 255, 255, 0.15);
+}
+.hour { text-align: center; width: 8rem; font-size: 2.2rem; }
+.h-time { opacity: 0.75; }
+.h-icon svg { width: 5rem; height: 5rem; margin: 1rem 0; }
+.h-temp { font-size: 2.8rem; font-weight: 600; }
+.h-rain { font-size: 1.8rem; color: #8fd0ff; min-height: 2.4rem; margin-top: 0.4rem; }
+#wd-sun { font-size: 2.6rem; margin-top: 2.6rem; opacity: 0.9; white-space: pre; }
+
+/* Icônes météo */
+.wicon svg { width: 4.4rem; height: 4.4rem; display: block; }
+svg .s-sun { fill: #ffd54a; }
+svg .s-ray { stroke: #ffd54a; stroke-width: 1.6; stroke-linecap: round; fill: none; }
+svg .s-moon { fill: #f2f0d8; }
+svg .s-cloud { fill: #f1f4f8; }
+svg .s-drop { stroke: #8fd0ff; stroke-width: 1.6; stroke-linecap: round; fill: none; }
+svg .s-snow { fill: #ffffff; }
+svg .s-bolt { stroke: #ffd54a; stroke-width: 1.8; stroke-linejoin: round; fill: none; }
+
+/* Réglages */
+#settings-cols { display: -webkit-flex; display: flex; }
+#settings-cols .col { -webkit-flex: 1; flex: 1; min-width: 0; }
+#settings-cols .col:first-child { margin-right: 5rem; }
+#app-list {
+    max-height: 58vh; overflow-y: auto; padding: 0.6rem;
+    display: -webkit-flex; display: flex; -webkit-flex-wrap: wrap; flex-wrap: wrap;
+    -webkit-align-content: flex-start; align-content: flex-start;
+}
+#app-list::-webkit-scrollbar { display: none; }
+.row {
+    width: 36rem; box-sizing: border-box; margin: 0 1.2rem 1.2rem 0;
+    display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center;
+    font-size: 2.4rem; padding: 1.4rem 1.8rem; border-radius: 1.4rem;
+    background: rgba(255, 255, 255, 0.07);
+}
+.row.focused { -webkit-transform: scale(1.03); transform: scale(1.03); }
+.row.on { background: rgba(255, 255, 255, 0.18); }
+.check {
+    width: 3.4rem; height: 3.4rem; border-radius: 1.7rem; margin-right: 1.6rem;
+    border: 0.25rem solid rgba(255, 255, 255, 0.5); box-sizing: border-box;
+    font-size: 1.9rem; font-weight: 700; text-align: center; line-height: 2.9rem;
+    -webkit-flex: 0 0 auto; flex: 0 0 auto;
+}
+.row.on .check { background: #fff; color: #111; border-color: #fff; }
+.row-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.field {
+    width: 100%; box-sizing: border-box; font-size: 2.6rem; padding: 1.6rem 2rem;
+    border-radius: 1.4rem; border: 0.2rem solid rgba(255, 255, 255, 0.25);
+    background: rgba(0, 0, 0, 0.3); color: #fff; outline: none; font-family: inherit;
+}
+.field.focused { -webkit-transform: none; transform: none; }
+.options { display: -webkit-flex; display: flex; -webkit-flex-wrap: wrap; flex-wrap: wrap; }
+.opt {
+    font-size: 2.2rem; padding: 1.2rem 2.2rem; border-radius: 3rem; margin: 0 1.2rem 1.2rem 0;
+    background: rgba(255, 255, 255, 0.08); border: 0.2rem solid transparent;
+}
+.opt.on { background: #fff; color: #111; font-weight: 600; }
+
+/* ---------- Message en bas d'écran ---------- */
+#toast {
+    position: fixed; left: 50%; bottom: 4rem; z-index: 30;
+    -webkit-transform: translateX(-50%); transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.85); color: #fff; font-size: 2.4rem;
+    padding: 1.6rem 3.2rem; border-radius: 3rem; white-space: nowrap;
+}
+
+/* ---------- Veille tableau ---------- */
+#artsaver { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 50; background: #000; cursor: none; }
+.art-img {
+    position: absolute; top: 3%; left: 3%; right: 3%; bottom: 3%;
+    background-repeat: no-repeat; background-position: center; background-size: contain;
+    opacity: 0;
+    -webkit-transition: opacity 2.5s ease-in-out; transition: opacity 2.5s ease-in-out;
+}
+.art-img.visible { opacity: 1; }
+.art-img.zoom { -webkit-animation: artzoom 90s linear forwards; animation: artzoom 90s linear forwards; }
+@-webkit-keyframes artzoom { from { -webkit-transform: scale(1); } to { -webkit-transform: scale(1.06); } }
+@keyframes artzoom { from { transform: scale(1); } to { transform: scale(1.06); } }
+
+#art-caption {
+    position: absolute; max-width: 60rem; z-index: 2;
+    text-shadow: 0 0.2rem 1rem #000, 0 0 2rem #000;
+}
+#art-clock { font-size: 5.4rem; font-weight: 300; opacity: 0.85; }
+#art-title { font-size: 2.4rem; font-style: italic; margin-top: 0.6rem; opacity: 0.85; }
+#art-artist { font-size: 2rem; opacity: 0.65; margin-top: 0.4rem; }
+.corner-0 { left: 5rem; bottom: 4.5rem; }
+.corner-1 { right: 5rem; bottom: 4.5rem; text-align: right; }
+.corner-2 { right: 5rem; top: 4rem; text-align: right; }
+.corner-3 { left: 5rem; top: 4rem; }
