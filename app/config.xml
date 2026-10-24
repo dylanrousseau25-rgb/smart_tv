@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<widget xmlns="http://www.w3.org/ns/widgets" xmlns:tizen="http://tizen.org/ns/widgets" id="http://freemytv.local/samsung" version="1.0.0" viewmodes="maximized">
+    <tizen:application id="FrMyTVsmg1.FreeMyTV" package="FrMyTVsmg1" required_version="2.3"/>
+    <tizen:profile name="tv-samsung"/>
+    <name>Free My TV</name>
+    <icon src="icon.png"/>
+    <content src="index.html"/>
+    <access origin="*" subdomains="true"/>
+    <feature name="http://tizen.org/feature/screen.size.all"/>
+
+    <!-- Lister et lancer les apps installées -->
+    <tizen:privilege name="http://tizen.org/privilege/application.info"/>
+    <tizen:privilege name="http://tizen.org/privilege/application.launch"/>
+    <!-- Touches de couleur et chiffres de la télécommande -->
+    <tizen:privilege name="http://tizen.org/privilege/tv.inputdevice"/>
+    <!-- Météo et tableaux -->
+    <tizen:privilege name="http://tizen.org/privilege/internet"/>
+
+    <tizen:setting screen-orientation="landscape" context-menu="disable" background-support="disable" encryption="disable" install-location="auto" hwkey-event="enable"/>
+</widget>

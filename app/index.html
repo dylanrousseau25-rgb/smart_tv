@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Free My TV</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- API Samsung (présente uniquement sur la TV) -->
+    <script src="$WEBAPIS/webapis/webapis.js"></script>
+</head>
+<body class="theme-nuit">
+
+<div id="sky"></div>
+
+<!-- ===== Écran d'accueil ===== -->
+<div id="home" class="layer">
+    <header id="topbar">
+        <div id="clock-block">
+            <div id="clock">--:--</div>
+            <div id="date"></div>
+        </div>
+        <div id="top-actions">
+            <div id="weather-widget" class="focusable chip" data-action="weather">
+                <span id="weather-icon" class="wicon"></span>
+                <span id="weather-temp">--°</span>
+                <span id="weather-city"></span>
+            </div>
+            <div id="settings-btn" class="focusable chip icon-only" data-action="settings" title="Réglages">
+                <svg viewBox="0 0 24 24"><path d="M19.4 13a7.5 7.5 0 0 0 0-2l2.1-1.6-2-3.5-2.5 1a7.6 7.6 0 0 0-1.7-1L15 3.3h-4l-.4 2.6a7.6 7.6 0 0 0-1.7 1l-2.5-1-2 3.5L6.6 11a7.5 7.5 0 0 0 0 2l-2.1 1.6 2 3.5 2.5-1c.5.4 1.1.7 1.7 1l.4 2.6h4l.4-2.6c.6-.3 1.2-.6 1.7-1l2.5 1 2-3.5L19.4 13zM13 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z" transform="translate(-1 0)"/></svg>
+            </div>
+        </div>
+    </header>
+
+    <section id="hero">
+        <div id="greeting">Bonsoir</div>
+        <div id="hero-sub"></div>
+    </section>
+
+    <section id="shelf-wrap">
+        <div id="shelf-hint"></div>
+        <div id="shelf"></div>
+    </section>
+</div>
+
+<!-- ===== Tiroir météo ===== -->
+<div id="weather-drawer" class="overlay hidden">
+    <div class="panel">
+        <h2 id="wd-title">Météo</h2>
+        <div id="wd-now"></div>
+        <div id="wd-hours"></div>
+        <div id="wd-sun"></div>
+        <div class="panel-actions">
+            <div class="focusable btn" data-action="close-overlay">Fermer</div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== Réglages ===== -->
+<div id="settings" class="overlay hidden">
+    <div class="panel wide">
+        <h2>Réglages</h2>
+        <div id="settings-cols">
+            <div class="col">
+                <h3>Applications sur l'étagère <span id="app-count"></span></h3>
+                <div id="app-list"></div>
+            </div>
+            <div class="col">
+                <h3>Ville pour la météo</h3>
+                <input id="city-input" class="focusable field" type="text" placeholder="Automatique (selon ta connexion)">
+
+                <h3>Thème</h3>
+                <div id="theme-options" class="options"></div>
+
+                <h3>Veille « tableau »</h3>
+                <div class="sub">Se lance après</div>
+                <div id="idle-options" class="options"></div>
+                <div class="sub">Collection</div>
+                <div id="art-options" class="options"></div>
+                <div class="sub">Changer de tableau toutes les</div>
+                <div id="artdur-options" class="options"></div>
+            </div>
+        </div>
+        <div class="panel-actions">
+            <div class="focusable btn primary" data-action="save-settings">Enregistrer</div>
+            <div class="focusable btn" data-action="reorder">Réorganiser l'étagère</div>
+            <div class="focusable btn" data-action="close-overlay">Annuler</div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== Veille tableau ===== -->
+<div id="artsaver" class="hidden">
+    <div id="art-a" class="art-img"></div>
+    <div id="art-b" class="art-img"></div>
+    <div id="art-caption">
+        <div id="art-clock"></div>
+        <div id="art-title"></div>
+        <div id="art-artist"></div>
+    </div>
+</div>
+
+<div id="toast" class="hidden"></div>
+
+<script src="js/util.js"></script>
+<script src="js/platform.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/weather.js"></script>
+<script src="js/art.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
